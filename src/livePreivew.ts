@@ -16,6 +16,7 @@ import { EmojiWidget } from "emoji";
 
 class EmojiListPlugin implements PluginValue {
 	decorations: DecorationSet;
+	dom: HTMLElement;
 
 	constructor(view: EditorView) {
 		this.decorations = this.buildDecorations(view);
@@ -35,6 +36,8 @@ class EmojiListPlugin implements PluginValue {
 		// view.docView.dom.style.width = "794px";
 		// docview.chilldren으로 만들면 될 듯 전체 넓이 구해서 pdf lib랑 같이 하면 됨
 		// electron에서 pdf 출력하고 해당 pdf를 수정하는 형식으로 진행
+		this.dom = view.contentDOM;
+		// console.log(view.contentDOM);
 		for (const { from, to } of view.visibleRanges) {
 			syntaxTree(view.state).iterate({
 				from,
@@ -58,6 +61,10 @@ class EmojiListPlugin implements PluginValue {
 		}
 
 		return builder.finish();
+	}
+
+	getDom() {
+		return this.dom;
 	}
 }
 

@@ -8,9 +8,6 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
-import * as fs from "fs/promises";
-import path from "path";
-import * as electron from "electron";
 
 import { livePreviewExtension } from "./livePreivew";
 // Remember to rename these classes and interfaces!
@@ -66,14 +63,7 @@ export default class MyPlugin extends Plugin {
 				);
 
 				console.log(plugin);
-				// const scale = 1.25;
 				if (plugin) {
-					new SampleModal(this.app, plugin).open();
-					// webview.src = `app://obsidian.md/help.html`;
-					// win.loadURL("app://obsidian.md/help.html");
-					// win.webContents.on("did-finish-load", () => {
-					// 	win.webContents.printToPDF({});
-					// });
 					// plugin.addPointerToSelection(editorView);
 				}
 			},
@@ -147,63 +137,13 @@ export default class MyPlugin extends Plugin {
 }
 
 class SampleModal extends Modal {
-	plugin: any = null;
-	constructor(app: App, plugin: any) {
+	constructor(app: App) {
 		super(app);
-		this.plugin = plugin;
 	}
 
 	onOpen() {
 		const { contentEl } = this;
-		// contentEl.setText("Woah!");
-		const e = contentEl.createEl("div");
-		const wb = document.createElement("webview");
-		const scale = 1.25;
-		wb.src = "app://obsidian.md/help.html";
-		wb.setAttribute(
-			"style",
-			`height:700px;
-			width: calc(${scale} * 100%);
-			transform: scale(${1 / scale}, ${1 / scale});
-			transform-origin: top left;
-			border: 1px solid #f2f2f2;
-			`,
-		);
-		wb.nodeintegration = true;
-		wb.addEventListener("dom-ready", () => {
-			console.log(decodeURIComponent(this.plugin.dom.outerHTML));
-			// this.plugin.dom.children((e: any) => e.removeAttribute("class"));
-			wb.executeJavaScript(`
-// document.body.innerHTML = decodeURIComponent(\`${encodeURIComponent(this.plugin.dom.outerHTML)}\`);
-document.body.innerHTML = "<div><br/></div><div>asdf</div>" 
-// document.body.setAttribute("class", \`${document.body.getAttribute("class")}\`)
-// document.body.setAttribute("style", \`${document.body.getAttribute("style")}\`)
-`);
-			wb.insertCSS(`@media print{
-				div {
-// position:absolute !important;
-// left:0 !important;
-// top:0 !important;
-    visibility: visible !important;
-display:unset !important;
-				}
-			}`);
-		});
-		console.log(this.plugin.dom);
-		e.appendChild(wb);
-
-		const handleExport = async () => {
-			const data = await wb.printToPDF({
-				// margins: { top: 3, left: 0, right: 0, bottom: 3 },
-			});
-			fs.writeFile("/Users/donghyunko//Downloads/test.pdf", data);
-		};
-
-		new Setting(contentEl).setHeading().addButton((button) => {
-			button.setButtonText("Export").onClick(handleExport);
-			button.setCta();
-			// fullWidthButton(button);
-		});
+		contentEl.setText("Woah!");
 	}
 
 	onClose() {
